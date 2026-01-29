@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SpectreKickBox")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c06fa8d07c4afc2b18c95eab29933994609af130")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+344ad656755efa2e98329ee4e4226d7f13a61296")]
 [assembly: System.Reflection.AssemblyProductAttribute("SpectreKickBox")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SpectreKickBox")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

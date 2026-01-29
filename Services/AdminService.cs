@@ -36,10 +36,13 @@ public class AdminService
                 new SelectionPrompt<string>()
                 .Title("[yellow]Admin Tasks[/]")
                 .PageSize(10)
-                .AddChoices("Visa Revenue", "Radera Medlem", "Tillbaka"));
+                .AddChoices("Skicka Faktura", "Visa Revenue", "Radera Medlem", "Tillbaka"));
 
             switch (choice)
             {
+                case "Skicka Faktura":
+                    CreateAndSendInvoice();
+                    break;
                 case "Visa Revenue":
                     ShowRevenue();
                     break;
@@ -77,25 +80,107 @@ public class AdminService
         AnsiConsole.WriteLine("\nTryck på valfri tangent för att fortsätta...");
         Console.ReadKey(true);
     }
+    public void CreateAndSendInvoice()
+    {
+        AnsiConsole.MarkupLine("[yellow]Skapa nya fakturor för medlemmar[/]");
+
+        var invoicesToCreate = new List<Invoice>();
+        bool addingInvoices = true;
+
+        while (addingInvoices)
+        {
+            int accountId = AnsiConsole.Ask<int>("Ange [green]AccountID[/] för faktura:");
+
+            // Fetch active membership and price for the user
+            var accountInfo = _context.Account
+                .Where(a => a.AccountID == accountId)
+                .Select(a => new
+                {
+                    FullName = a.AppUser.FirstName + " " + a.AppUser.LastName,
+                    MembershipPlanID = a.AppUser.Membership
+                        .Where(m => m.IsActive)
+                        .Select(m => m.MembershipPlanID)
+                        .FirstOrDefault(),
+                    Price = a.AppUser.Membership
+                        .Where(m => m.IsActive)
+                        .Select(m => m.MembershipPlan.PriceList.Amount)
+                        .FirstOrDefault()
+                })
+                .FirstOrDefault();
+
+            if (accountInfo == null || accountInfo.Price == 0 || accountInfo.MembershipPlanID == 0)
+            {
+                AnsiConsole.MarkupLine("[red]Ingen aktiv medlemskap eller pris hittades för detta konto.[/]");
+                continue;
+            }
+
+            // Show confirmation before creating invoice
+            AnsiConsole.MarkupLine($"Skapar faktura för: [green]{accountInfo.FullName}[/], Belopp: [green]{accountInfo.Price} kr[/]");
+            if (!AnsiConsole.Confirm("Vill du fortsätta med denna faktura?"))
+                continue;
+
+            invoicesToCreate.Add(new Invoice
+            {
+                AccountID = accountId,
+                MembershipPlanID = accountInfo.MembershipPlanID,
+                InvoiceDate = DateTime.Now
+            });
+
+            addingInvoices = AnsiConsole.Confirm("Vill du lägga till en till faktura?");
+        }
+
+        if (invoicesToCreate.Count > 0)
+        {
+            _context.Invoice.AddRange(invoicesToCreate);
+            _context.SaveChanges();
+            AnsiConsole.MarkupLine($"[green]{invoicesToCreate.Count} fakturor skapades och skickades![/]");
+        }
+        else
+        {
+            AnsiConsole.MarkupLine("[yellow]Inga fakturor skapades.[/]");
+        }
+
+        AnsiConsole.WriteLine("\nTryck på valfri tangent för att fortsätta...");
+        Console.ReadKey(true);
+    }
+
 
     public void DeleteMember()
     {
         int id = AnsiConsole.Ask<int>("AccountID att ta bort?");
-        var acc = _context.Account.Find(id);
 
-        if (acc != null)
-        {
-            // Confirmation prompt to prevent accidental deletion
-            if (AnsiConsole.Confirm($"Är du säker på att du vill radera konto [red]{id}[/]?"))
-            {
-                _context.Account.Remove(acc);
-                _context.SaveChanges();
-                AnsiConsole.MarkupLine("[green]Kontot har raderats![/]");
-            }
-        }
-        else
+        // 1. Fetch the account AND the associated AppUser data
+        var acc = _context.Account
+            .Include(a => a.AppUser) // This joins the AppUser table
+            .FirstOrDefault(a => a.AccountID == id);
+
+        if (acc == null)
         {
             AnsiConsole.MarkupLine($"[red]Konto med ID {id} hittades inte.[/]");
+            return;
+        }
+
+        // 2. Create a friendly name string
+        string fullName = $"{acc.AppUser.FirstName} {acc.AppUser.LastName}";
+
+        // 3. Updated Confirmation Prompt
+        if (AnsiConsole.Confirm($"Är du säker på att du vill radera [bold]{fullName}[/] (AccountID: [yellow]{id}[/])?"))
+        {
+            // Clear related data to avoid foreign key errors
+            var relatedInvoices = _context.Invoice.Where(i => i.AccountID == id);
+            _context.Invoice.RemoveRange(relatedInvoices);
+
+            var relatedNewsletters = _context.Newsletter.Where(n => n.PostedByAccountID == id);
+            _context.Newsletter.RemoveRange(relatedNewsletters);
+
+            var relatedSessions = _context.Session.Where(s => s.TrainerID == id);
+            _context.Session.RemoveRange(relatedSessions);
+
+            // Finally, remove the account
+            _context.Account.Remove(acc);
+
+            _context.SaveChanges();
+            AnsiConsole.MarkupLine($"[green]Kontot för {fullName} har raderats![/]");
         }
     }
 }

@@ -16,8 +16,10 @@ namespace SpectreKickBox.Data
         public virtual DbSet<Membership> Membership { get; set; }
         public virtual DbSet<MembershipPlan> MembershipPlan { get; set; }
         public virtual DbSet<PriceList> PriceList { get; set; }
+        public virtual DbSet<SessionType> SessionType { get; set; }
         public virtual DbSet<Session> Session { get; set; }
         public virtual DbSet<WeekDay> WeekDay { get; set; }
+        public virtual DbSet<Invoice> Invoice { get; set; }
         public virtual DbSet<Newsletter> Newsletter { get; set; }
         public virtual DbSet<Role> Role { get; set; }
 
