@@ -1,12 +1,14 @@
-﻿namespace SpectreKickBox.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace SpectreKickBox.Models
 {
-    public partial class DayOfWeek
+    public partial class WeekDay
     {
-        public DayOfWeek()
+        public WeekDay()
         {
             Session = new HashSet<Session>();
         }
-
+        [Key]
         public int DayID { get; set; }
         public string DayName { get; set; } = null!;
 

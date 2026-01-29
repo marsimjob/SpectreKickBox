@@ -15,15 +15,16 @@ public class MemberService
     public void ShowNews()
     {
         var newsItems = _context.Newsletter
-            .Where(n => n.IsActive)
-            .OrderByDescending(n => n.PostYear)
-            .ThenByDescending(n => n.PostWeek)
-            .ToList();
-
+    .Include(n => n.PostedByAccount)
+        .ThenInclude(a => a.AppUser)
+    .Where(n => n.IsActive)
+    .OrderByDescending(n => n.PostYear)
+    .ThenByDescending(n => n.PostWeek)
+    .ToList();
         var table = new Table().AddColumn("Topic").AddColumn("Contents").AddColumn("Posted By");
         foreach (var n in newsItems)
         {
-            table.AddRow(n.NewsTitle, n.NewsContent, $"{n.PostedByAccount.User.FirstName} {n.PostedByAccount.User.LastName}");
+            table.AddRow(n.NewsTitle, n.NewsContent, $"{n.PostedByAccount.AppUser.FirstName} {n.PostedByAccount.AppUser.LastName}");
         }
 
         AnsiConsole.Write(table);
@@ -33,7 +34,7 @@ public class MemberService
     {
         var email = AnsiConsole.Ask<string>("Email");
         var userAcct = _context.Account
-            .Include(a => a.User)
+            .Include(a => a.AppUser)
             .Include(a => a.Role)
             .FirstOrDefault(a => a.Email == email);
 
@@ -43,19 +44,19 @@ public class MemberService
             return;
         }
 
-        AnsiConsole.MarkupLine($"[green]Välkommen {userAcct.User.FirstName}![/]");
+        AnsiConsole.MarkupLine($"[green]Välkommen {userAcct.AppUser.FirstName}![/]");
 
         var membership = _context.Membership
-            .Include(m => m.MembershipPlan)
-            .ThenInclude(mp => mp.PriceList)
-            .FirstOrDefault(m => m.UserID == userAcct.UserID && m.IsActive);
+        .Include(m => m.MembershipPlan)
+        .ThenInclude(mp => mp.PriceList)
+        .FirstOrDefault(m => m.UserID == userAcct.UserID && m.IsActive);
 
         if (membership == null)
         {
             AnsiConsole.MarkupLine("[yellow]Du har inget aktivt medlemskap[/]");
             return;
         }
-
+        
         AnsiConsole.MarkupLine($"Plan: {membership.MembershipPlan.BillingPeriod}");
         AnsiConsole.MarkupLine($"Pris: {membership.MembershipPlan.PriceList.Label} ({membership.MembershipPlan.PriceList.Amount} kr)");
     }

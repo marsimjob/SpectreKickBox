@@ -55,27 +55,27 @@ public class AdminService
 
     public void ShowRevenue()
     {
-        //// Add a safety check in case the view returns no rows
-        //var rev = _context.vw_TotalInvoiceRevenue.FirstOrDefault();
+        // Add a safety check in case the view returns no rows
+        var rev = _context.vw_TotalInvoiceRevenue.FirstOrDefault();
 
-        //if (rev != null)
-        //{
-        //    var panel = new Panel(new Rows(
-        //        new Markup($"[bold green]Totalt Revenue:[/] {rev.Revenue} kr"),
-        //        new Markup($"[bold blue]Antal Fakturor:[/] {rev.NumberOfInvoices}")
-        //    ));
-        //    panel.Header = new PanelHeader("Ekonomisk Översikt");
-        //    panel.Border = BoxBorder.Rounded;
+        if (rev != null)
+        {
+            var panel = new Panel(new Rows(
+                new Markup($"[bold green]Totalt Revenue:[/] {rev.Revenue} kr"),
+                new Markup($"[bold blue]Antal Fakturor:[/] {rev.NumberOfInvoices}")
+            ));
+            panel.Header = new PanelHeader("Ekonomisk Översikt");
+            panel.Border = BoxBorder.Rounded;
 
-        //    AnsiConsole.Write(panel);
-        //}
-        //else
-        //{
-        //    AnsiConsole.MarkupLine("[yellow]Ingen revenue-data tillgänglig för tillfället.[/]");
-        //}
+            AnsiConsole.Write(panel);
+        }
+        else
+        {
+            AnsiConsole.MarkupLine("[yellow]Ingen revenue-data tillgänglig för tillfället.[/]");
+        }
 
-        //AnsiConsole.WriteLine("\nTryck på valfri tangent för att fortsätta...");
-        //Console.ReadKey(true);
+        AnsiConsole.WriteLine("\nTryck på valfri tangent för att fortsätta...");
+        Console.ReadKey(true);
     }
 
     public void DeleteMember()

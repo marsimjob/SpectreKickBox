@@ -5,7 +5,7 @@ using SpectreKickBox.Data;
 
 // Load configuration
 var config = new ConfigurationBuilder()
-    .AddJsonFile("D:\\Handelsakademin\\C++\\DynamicMemory\\SpectreKickBox\\appsettings.json")
+    .AddJsonFile("C:\\Users\\mario\\source\\repos\\SpectreKickBox\\appsettings.json")
     .Build();
 
 // Setup DbContext

@@ -1,8 +1,11 @@
-﻿namespace SpectreKickBox.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace SpectreKickBox.Models
 {
     public partial class PriceList
     {
-        public int PriceListID { get; set; }
+        [Key]
+        public int PriceID { get; set; } // Changed from PriceListID to PriceID
         public string Label { get; set; } = null!;
         public decimal Amount { get; set; }
     }

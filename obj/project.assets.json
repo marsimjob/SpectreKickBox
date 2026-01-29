@@ -5066,23 +5066,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Senkai\\.nuget\\packages\\": {},
+    "C:\\Users\\mario\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Handelsakademin\\C++\\DynamicMemory\\SpectreKickBox\\SpectreKickBox.csproj",
+      "projectUniqueName": "C:\\Users\\mario\\Source\\Repos\\SpectreKickBox\\SpectreKickBox.csproj",
       "projectName": "SpectreKickBox",
-      "projectPath": "D:\\Handelsakademin\\C++\\DynamicMemory\\SpectreKickBox\\SpectreKickBox.csproj",
-      "packagesPath": "C:\\Users\\Senkai\\.nuget\\packages\\",
-      "outputPath": "D:\\Handelsakademin\\C++\\DynamicMemory\\SpectreKickBox\\obj\\",
+      "projectPath": "C:\\Users\\mario\\Source\\Repos\\SpectreKickBox\\SpectreKickBox.csproj",
+      "packagesPath": "C:\\Users\\mario\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\mario\\Source\\Repos\\SpectreKickBox\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\Senkai\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\mario\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -5091,6 +5091,7 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {

@@ -14,9 +14,9 @@ public class SessionService
     public void ShowWeeklySessions()
     {
         var sessions = _context.Session
-            .Include(s => s.DayOfWeek)
+            .Include(s => s.WeekDay)
             .Include(s => s.Trainer)
-                .ThenInclude(a => a.User)
+                .ThenInclude(a => a.AppUser)
             .OrderBy(s => s.DayID)
             .ThenBy(s => s.StartTime)
             .ToList();
@@ -30,10 +30,10 @@ public class SessionService
         foreach (var s in sessions)
         {
             table.AddRow(
-                s.DayOfWeek.DayName,
+                s.WeekDay.DayName,
                 s.StartTime.ToString().Substring(0, 5),
-                $"{s.Trainer.User.FirstName} {s.Trainer.User.LastName}",
-                s.Description);
+                $"{s.Trainer.AppUser.FirstName} {s.Trainer.AppUser.LastName}",
+                s.Focus);
         }
 
         AnsiConsole.Write(table);
