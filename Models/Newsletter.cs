@@ -9,7 +9,7 @@
         public bool IsActive { get; set; }
         public int PostYear { get; set; }
         public int PostWeek { get; set; }
-
+        public string NewsType { get; set; } = null!;
         public virtual Account PostedByAccount { get; set; } = null!;
     }
 }

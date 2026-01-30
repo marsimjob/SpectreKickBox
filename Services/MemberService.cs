@@ -94,7 +94,7 @@ namespace SpectreKickBox.Services
             AnsiConsole.MarkupLine($"[green]Kontot för {fullName} har raderats helt.[/]");
         }
 
-
+       
         public void ShowNews()
         {
             var newsItems = _context.Newsletter
@@ -105,10 +105,10 @@ namespace SpectreKickBox.Services
                 .ThenByDescending(n => n.PostWeek)
                 .ToList();
 
-            var table = new Table().AddColumn("Topic").AddColumn("Contents").AddColumn("Posted By");
+            var table = new Table().AddColumn("Ämne").AddColumn("Info").AddColumn("Publicerat av").AddColumn("Vecka");
             foreach (var n in newsItems)
             {
-                table.AddRow(n.NewsTitle, n.NewsContent, $"{n.PostedByAccount.AppUser.FirstName} {n.PostedByAccount.AppUser.LastName}");
+                table.AddRow(n.NewsTitle, n.NewsContent, $"{n.PostedByAccount.AppUser.FirstName} {n.PostedByAccount.AppUser.LastName}", $"{n.PostWeek} {n.PostYear}");
             }
             AnsiConsole.Write(table);
         }

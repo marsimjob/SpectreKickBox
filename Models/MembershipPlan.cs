@@ -8,8 +8,6 @@ namespace SpectreKickBox.Models
         [Key]
         public int MembershipPlanID { get; set; }
 
-
-
         public string BillingPeriod { get; set; } = null!;
 
         public int PriceID { get; set; }
