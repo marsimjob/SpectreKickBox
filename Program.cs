@@ -4,7 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Spectre.Console;
 using SpectreKickBox.Data;
 using SpectreKickBox.Services;
-
+using System.Text;
 
 // Tvinga konsolen att tolka UTF-8 (viktigt för emojis och specialtecken)
 Console.OutputEncoding = Encoding.UTF8;
