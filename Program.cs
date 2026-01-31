@@ -8,7 +8,7 @@ using SpectreKickBox.Services;
 
 // Load configuration
 var config = new ConfigurationBuilder()
-    .AddJsonFile("C:\\Users\\Hager Sayed\\Desktop\\gruppproject\\appsettings.json")
+    .AddJsonFile("C:\\Users\\Senkai\\source\\repos\\SpectreKickBox2\\appsettings.json")
     .Build();
 
 // Setup DbContext
