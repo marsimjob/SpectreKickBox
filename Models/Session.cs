@@ -1,40 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
-namespace SpectreKickBox.Models
+namespace SpectreKickBox.Models;
+
+public partial class Session
 {
-    public partial class Session
-    {
-        [Key]
-        public int SessionID { get; set; }
+    public int SessionId { get; set; }
 
-        public int DayID { get; set; }
+    public int TrainerId { get; set; }
 
-        public int TrainerID { get; set; }
+    public int SessionTypeId { get; set; }
 
-        // 1. ADD: The Foreign Key for SessionType
-        public int SessionTypeID { get; set; }
+    public TimeOnly StartTime { get; set; }
 
-        public TimeSpan StartTime { get; set; }
+    public int Duration { get; set; }
 
-        // 2. ADD: These were in your SQL but missing from your C# class
-        public int Duration { get; set; }
-        public int Capacity { get; set; }
-        public int SessionWeek { get; set; }
+    public int Capacity { get; set; }
 
-        public string Focus { get; set; } = null!;
+    public string? Focus { get; set; }
 
-        // KEPT: Existing property names
-        [ForeignKey(nameof(DayID))]
-        public virtual WeekDay WeekDay { get; set; } = null!;
+    public int DayId { get; set; }
 
-        [ForeignKey(nameof(TrainerID))]
-        public virtual Account Trainer { get; set; } = null!;
+    public int SessionWeek { get; set; }
 
-        // 3. ADD: The missing Navigation Property to fix the error
-        [ForeignKey(nameof(SessionTypeID))]
-        public virtual SessionType SessionType { get; set; } = null!;
-    }
+    public virtual WeekDay Day { get; set; } = null!;
+
+    public virtual SessionType SessionType { get; set; } = null!;
+
+    public virtual Account Trainer { get; set; } = null!;
 }

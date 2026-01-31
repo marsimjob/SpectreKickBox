@@ -22,8 +22,7 @@ var options = new DbContextOptionsBuilder<KickBoxingClubContext>()
 var memberService = new MemberService(new KickBoxingClubContext(options));
 var sessionService = new SessionService(new KickBoxingClubContext(options));
 var adminService = new AdminService(new KickBoxingClubContext(options));
-var RegisterService = new RegisterService(new KickBoxingClubContext(options));
-
+var registerService = new RegisterService(new KickBoxingClubContext(options));
 
 PlayKickAnimation();
 bool running = true;
@@ -57,8 +56,9 @@ while (running)
 
             using (var context = new KickBoxingClubContext(options))
             {
-                var account = context.Account
-                    .Include(a => a.AppUser)
+                // Match: .Accounts, .User, .Role
+                var account = context.Accounts
+                    .Include(a => a.User)
                     .Include(a => a.Role)
                     .FirstOrDefault(a => a.Email == email);
 
@@ -80,7 +80,7 @@ while (running)
             adminService.LoginAndAdminTasks();
             break;
         case "🥋 Bli medlem":
-            RegisterService.Register();
+            registerService.Register();
             break;
         case "❌ Avsluta":
             AnsiConsole.MarkupLine("[yellow]Ses på nästa träning! Hejdå![/] :wave:");

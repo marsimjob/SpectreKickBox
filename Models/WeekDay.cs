@@ -1,17 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
 
-namespace SpectreKickBox.Models
+namespace SpectreKickBox.Models;
+
+public partial class WeekDay
 {
-    public partial class WeekDay
-    {
-        public WeekDay()
-        {
-            Session = new HashSet<Session>();
-        }
-        [Key]
-        public int DayID { get; set; }
-        public string DayName { get; set; } = null!;
+    public int DayId { get; set; }
 
-        public virtual ICollection<Session> Session { get; set; }
-    }
+    public string DayName { get; set; } = null!;
+
+    public virtual ICollection<Session> Sessions { get; set; } = new List<Session>();
 }

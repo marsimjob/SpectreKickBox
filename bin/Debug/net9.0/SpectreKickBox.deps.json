@@ -10,6 +10,7 @@
         "dependencies": {
           "BCrypt.Net-Next": "4.0.3",
           "Microsoft.EntityFrameworkCore": "9.0.12",
+          "Microsoft.EntityFrameworkCore.Design": "9.0.12",
           "Microsoft.EntityFrameworkCore.SqlServer": "9.0.12",
           "Microsoft.EntityFrameworkCore.Tools": "9.0.12",
           "Microsoft.Extensions.Configuration": "10.0.2",

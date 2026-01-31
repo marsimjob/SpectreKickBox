@@ -1,27 +1,23 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
+using System.Collections.Generic;
 
-namespace SpectreKickBox.Models
+namespace SpectreKickBox.Models;
+
+public partial class MembershipPlan
 {
-    public partial class MembershipPlan
-    {
-        [Key]
-        public int MembershipPlanID { get; set; }
+    public int MembershipPlanId { get; set; }
 
+    public int RoleId { get; set; }
 
+    public int PriceId { get; set; }
 
-        public string BillingPeriod { get; set; } = null!;
+    public string BillingPeriod { get; set; } = null!;
 
-        public int PriceID { get; set; }
+    public virtual ICollection<Invoice> Invoices { get; set; } = new List<Invoice>();
 
-        public int RoleID { get; set; }
+    public virtual ICollection<Membership> Memberships { get; set; } = new List<Membership>();
 
-        [ForeignKey(nameof(PriceID))]
-        public virtual PriceList PriceList { get; set; } = null!;
+    public virtual PriceList Price { get; set; } = null!;
 
-        [ForeignKey("RoleID")]
-        public virtual Role Role { get; set; } = null!;
-
-        public virtual ICollection<Membership> Memberships { get; set; } = new HashSet<Membership>();
-    }
+    public virtual Role Role { get; set; } = null!;
 }

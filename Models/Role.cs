@@ -1,17 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
-namespace SpectreKickBox.Models
+namespace SpectreKickBox.Models;
+
+public partial class Role
 {
-    public partial class Role
-    {
-        public Role()
-        {
-            Account = new HashSet<Account>();
-        }
+    public int RoleId { get; set; }
 
-        public int RoleID { get; set; }
-        public string Title { get; set; } = null!;
+    public string Title { get; set; } = null!;
 
-        public virtual ICollection<Account> Account { get; set; }
-    }
+    public virtual ICollection<Account> Accounts { get; set; } = new List<Account>();
+
+    public virtual ICollection<MembershipPlan> MembershipPlans { get; set; } = new List<MembershipPlan>();
 }

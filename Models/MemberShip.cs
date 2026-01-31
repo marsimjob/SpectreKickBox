@@ -1,26 +1,23 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+using System.Collections.Generic;
 
-namespace SpectreKickBox.Models
+namespace SpectreKickBox.Models;
+
+public partial class Membership
 {
-    public partial class Membership
-    {
-        [Key]
-        public int MembershipID { get; set; }
+    public int MembershipId { get; set; }
 
-        public int UserID { get; set; }
-        public int MembershipPlanID { get; set; }
-        public bool IsActive { get; set; }
-        public DateTime StartDate { get; set; }
-        public DateTime EndDate { get; set; }
+    public int UserId { get; set; }
 
+    public bool IsActive { get; set; }
 
-        [ForeignKey("UserID")]
-        public virtual AppUser AppUser { get; set; } = null!;
+    public DateTime StartDate { get; set; }
 
-        [ForeignKey("MembershipPlanID")]
-        public virtual MembershipPlan MembershipPlan { get; set; } = null!;
-    }
+    public DateTime EndDate { get; set; }
 
+    public int MembershipPlanId { get; set; }
+
+    public virtual MembershipPlan MembershipPlan { get; set; } = null!;
+
+    public virtual AppUser User { get; set; } = null!;
 }

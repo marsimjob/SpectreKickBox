@@ -1,28 +1,19 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+using System.Collections.Generic;
 
-namespace SpectreKickBox.Models
+namespace SpectreKickBox.Models;
+
+public partial class Invoice
 {
-    public class Invoice
-    {
-        [Key]
-        public int InvoiceID { get; set; }
+    public int InvoiceId { get; set; }
 
-        [Required]
-        public int AccountID { get; set; }
+    public int AccountId { get; set; }
 
-        [Required]
-        public int MembershipPlanID { get; set; }
+    public int MembershipPlanId { get; set; }
 
-        [Required]
-        public DateTime InvoiceDate { get; set; } = DateTime.Now; // Default to current date
+    public DateTime InvoiceDate { get; set; }
 
-        // Navigation properties (optional, for EF relationships)
-        [ForeignKey("AccountID")]
-        public virtual Account Account { get; set; }
+    public virtual Account Account { get; set; } = null!;
 
-        [ForeignKey("MembershipPlanID")]
-        public virtual MembershipPlan MembershipPlan { get; set; }
-    }
+    public virtual MembershipPlan MembershipPlan { get; set; } = null!;
 }

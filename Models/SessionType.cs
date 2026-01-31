@@ -1,17 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
 
-namespace SpectreKickBox.Models
+namespace SpectreKickBox.Models;
+
+public partial class SessionType
 {
-    public class SessionType
-    {
-        [Key]
-        public int SessionTypeID { get; set; }
+    public int SessionTypeId { get; set; }
 
-        [Required]
-        [StringLength(30)]
-        public string TypeTitle { get; set; } = string.Empty;
+    public string TypeTitle { get; set; } = null!;
 
-        // Navigation property: One SessionType can have many scheduled Sessions
-        public virtual ICollection<Session> Sessions { get; set; } = new List<Session>();
-    }
+    public virtual ICollection<Session> Sessions { get; set; } = new List<Session>();
 }

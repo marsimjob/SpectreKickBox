@@ -63,7 +63,7 @@ namespace SpectreKickBox.Services
                         : Spectre.Console.ValidationResult.Error("[red]Invalid email address[/]"))
             );
 
-            if (_context.Account.Any(a => a.Email == email))
+            if (_context.Accounts.Any(a => a.Email == email))
             {
                 AnsiConsole.MarkupLine("[red]That email is already registered.[/]");
                 return;
@@ -88,8 +88,7 @@ namespace SpectreKickBox.Services
             var user = new AppUser
             {
                 FirstName = firstName.Trim(),
-                LastName = lastName.Trim(),
-                DateOfBirth = dateOfBirth.Date,
+                LastName = lastName.Trim()
             };
 
             var passwordHash = BCrypt.Net.BCrypt.HashPassword(password, workFactor: 12);
@@ -98,8 +97,7 @@ namespace SpectreKickBox.Services
             {
                 Email = email,
                 PasswordHash = passwordHash,
-                RoleID = 3
-               
+                RoleId = 3
             };
 
             using var tx = _context.Database.BeginTransaction();
@@ -109,7 +107,7 @@ namespace SpectreKickBox.Services
                 _context.Add(user);
                 _context.SaveChanges();          
 
-                account.UserID = user.UserID;    
+                account.UserId = user.UserId;    
 
                 _context.Add(account);
                 _context.SaveChanges();
@@ -123,7 +121,7 @@ namespace SpectreKickBox.Services
             }
 
             AnsiConsole.MarkupLine(
-                $"[green]User[/] [blue]{user.FirstName} {user.LastName}[/] (ID: [yellow]{user.UserID}[/] with the email [blue]{account.Email}[/] has been added to the database!)"
+                $"[green]User[/] [blue]{user.FirstName} {user.LastName}[/] (ID: [yellow]{user.UserId}[/] with the email [blue]{account.Email}[/] has been added to the database!)"
             );
             
         }
