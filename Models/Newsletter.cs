@@ -7,6 +7,8 @@
         public string NewsContent { get; set; } = null!;
         public int PostedByAccountID { get; set; }
         public bool IsActive { get; set; }
+
+        public string NewsType { get; set; } = null!;
         public int PostYear { get; set; }
         public int PostWeek { get; set; }
 
