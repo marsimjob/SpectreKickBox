@@ -12,6 +12,9 @@ namespace SpectreKickBox.Models
         public int UserID { get; set; }
         public int MembershipPlanID { get; set; }
         public bool IsActive { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
+
 
         [ForeignKey("UserID")]
         public virtual AppUser AppUser { get; set; } = null!;
