@@ -14,10 +14,8 @@ namespace SpectreKickBox.Services
             _context = context;
         }
 
-        // --- NEW: SEARCH SESSIONS BY TYPE ---
         public void LookForSession()
         {
-            // Use a Selection Prompt so users don't have to type the name manually
             var typeName = AnsiConsole.Prompt(
                 new SelectionPrompt<string>()
                     .Title("Vilken [blue]grupp[/] vill du söka efter?")
@@ -58,8 +56,6 @@ namespace SpectreKickBox.Services
 
             AnsiConsole.Write(table);
         }
-
-        // --- UPDATED: DELETE MEMBER WITH FULL CLEANUP ---
         public void DeleteMember(Account userAcct)
         {
             var acc = _context.Account
@@ -111,6 +107,9 @@ namespace SpectreKickBox.Services
                 table.AddRow(n.NewsTitle, n.NewsContent, $"{n.PostedByAccount.AppUser.FirstName} {n.PostedByAccount.AppUser.LastName}", $"{n.PostWeek} {n.PostYear}");
             }
             AnsiConsole.Write(table);
+            AnsiConsole.WriteLine();
+            AnsiConsole.MarkupLine("[grey]Tryck på valfri tangent för att återgå till huvudmenyn...[/]");
+            Console.ReadKey(true);
         }
 
         public void LoginAndShowDashboard()
@@ -149,32 +148,33 @@ namespace SpectreKickBox.Services
             while (inMemberMenu)
             {
                 AnsiConsole.Clear();
+                SessionService.ShowHeader(Spectre.Console.Color.Yellow, "[bold red] MEDLEMSMENY[/]");
                 AnsiConsole.MarkupLine($"[bold blue]Inloggad som:[/] {userAcct.AppUser.FirstName} {userAcct.AppUser.LastName}");
 
                 var choice = AnsiConsole.Prompt(
-                    new SelectionPrompt<string>()
-                        .Title("[green]Medlemsmeny[/]")
-                        .AddChoices(new[] {
-                    "Min Profil & Medlemskap",
-                    "Sök Träningspass",
-                    "Radera Mitt Konto", // Optional: Be careful!
-                    "Logga ut"
-                        }));
+             new SelectionPrompt<string>()
+                 .Title("[bold white]VAD ÄR DITT NÄSTA DRAG?[/]")
+                 .PageSize(10)
+                 .AddChoices(new[] {
+                    "👤 Min Profil & Medlemskap",
+                    "🔍 Sök Träningspass",
+                    "🔥 Radera Mitt Konto",
+                    "🚪 Logga ut"
+                 }));
 
                 switch (choice)
                 {
-                    case "Min Profil & Medlemskap":
-                        ShowProfile(userAcct); // Split the dashboard logic
+                    case "👤 Min Profil & Medlemskap":
+                        ShowProfile(userAcct);
                         break;
-                    case "Sök Träningspass":
+                    case "🔍 Sök Träningspass":
                         LookForSession();
                         break;
-                    case "Radera Mitt Konto":
+                    case "🔥 Radera Mitt Konto":
                         DeleteMember(userAcct);
-                        // If they delete themselves, we must kick them out
                         inMemberMenu = false;
                         break;
-                    case "Logga ut":
+                    case "🚪 Logga ut":
                         inMemberMenu = false;
                         break;
                 }
@@ -187,11 +187,8 @@ namespace SpectreKickBox.Services
             }
         }
 
-        // Helper to show the dashboard info without asking for email again
-
         private void ShowProfile(Account userAcct)
         {
-            // --- Hämta konto + AppUser från DB (viktigt för FK!) ---
             var acc = _context.Account
                 .Include(a => a.AppUser)
                 .Include(a => a.Role)
@@ -205,12 +202,10 @@ namespace SpectreKickBox.Services
 
             var userId = acc.AppUser.UserID;
 
-            // --- Visa grundinfo ---
             AnsiConsole.MarkupLine($"[bold underline]Profil Information[/]");
             AnsiConsole.MarkupLine($"Namn: {acc.AppUser.FirstName} {acc.AppUser.LastName}");
             AnsiConsole.MarkupLine($"Roll: {acc.Role.Title}");
 
-            // --- Hämta aktivt medlemskap ---
             var membership = _context.Membership
                 .Include(m => m.MembershipPlan)
                     .ThenInclude(mp => mp.PriceList)
@@ -226,7 +221,6 @@ namespace SpectreKickBox.Services
                 return;
             }
 
-            // --- Inget medlemskap: erbjud nytt ---
             AnsiConsole.MarkupLine("[yellow]Inget aktivt medlemskap hittades.[/]");
 
             if (!AnsiConsole.Confirm("Vill du teckna ett nytt medlemskap?"))
@@ -240,7 +234,6 @@ namespace SpectreKickBox.Services
             if (choice == "Avsluta")
                 return;
 
-            // --- Hämta vald MembershipPlan ---
             var plan = _context.MembershipPlan
                 .FirstOrDefault(p => p.BillingPeriod == choice);
 
@@ -250,8 +243,6 @@ namespace SpectreKickBox.Services
                 return;
             }
 
-            // --- Beräkna giltighetstid ---
-            // --- Beräkna giltighetstid ---
             var start = DateTime.Now;
 
             var end = choice switch
@@ -262,7 +253,6 @@ namespace SpectreKickBox.Services
                 _ => start.AddMonths(1)
             };
 
-            // --- Skapa Membership ---
             var newMembership = new Membership
             {
                 UserID = userId,
@@ -273,7 +263,6 @@ namespace SpectreKickBox.Services
             };
 
 
-
             _context.Membership.Add(newMembership);
             _context.SaveChanges();
 
@@ -282,8 +271,6 @@ namespace SpectreKickBox.Services
                 $"Din prisplan är: [blue]{plan.BillingPeriod}[/]\n" +
                 $"Giltigt från: [yellow]{start:yyyy-MM-dd}[/] till [yellow]{end:yyyy-MM-dd}[/]"
             );
-
-
         }
 
     }

@@ -11,6 +11,7 @@ public class AdminService
     {
         _context = context;
     }
+
     public void LoginAndAdminTasks()
     {
         var email = AnsiConsole.Ask<string>("Admin Email:");
@@ -32,39 +33,51 @@ public class AdminService
         bool adminMenu = true;
         while (adminMenu)
         {
+            SessionService.ShowHeader(Spectre.Console.Color.Red, "[bold white]🥊 CLUB ADMINISTRATION SYSTEM 🥊[/]");
+
             var choice = AnsiConsole.Prompt(
                 new SelectionPrompt<string>()
-                .Title("[yellow]Admin Tasks[/]")
-                .PageSize(10)
-                .AddChoices("Skapa Träningspass", "Rensa Träningsvecka", "Skriv Nyhetsbrev", "Rensa månadsgamla nyhetsbrev", "Se alla fakturor", "Skicka Faktura", "Visa Revenue", "Radera Medlem", "Tillbaka"));
+                .Title("[yellow]Välj administrativ uppgift:[/]")
+                .PageSize(12) // Ökade storleken lite för att rymma allt snyggt
+                .AddChoices(new[] {
+            "➕ Skapa Träningspass",
+            "🧹 Rensa Träningsvecka",
+            "📝 Skriv Nyhetsbrev",
+            "🗑️ Rensa gamla nyhetsbrev",
+            "📑 Se alla fakturor",
+            "💳 Skicka Faktura",
+            "💰 Visa Revenue",
+            "❌ Radera Medlem",
+            "🔙 Tillbaka"
+                }));
 
             switch (choice)
             {
-                case "Skapa Träningspass":
+                case "➕ Skapa Träningspass":
                     AddWorkoutSession();
                     break;
-                case "Rensa Träningsvecka":
+                case "🧹 Rensa Träningsvecka":
                     DeleteAllSessions();
                     break;
-                case "Skriv Nyhetsbrev":
+                case "📝 Skriv Nyhetsbrev":
                     WriteNewsletter(userAcct.AccountID, userAcct.AppUser.FirstName);
                     break;
-                case "Rensa månadsgamla nyhetsbrev":
+                case "🗑️ Rensa gamla nyhetsbrev":
                     CleanOldNewsletters();
                     break;
-                case "Se alla fakturor":
+                case "📑 Se alla fakturor":
                     OverseeInvoices();
                     break;
-                case "Skicka Faktura":
+                case "💳 Skicka Faktura":
                     CreateAndSendInvoice();
                     break;
-                case "Visa Revenue":
+                case "💰 Visa Revenue":
                     ShowRevenue();
                     break;
-                case "Radera Medlem":
+                case "❌ Radera Medlem":
                     DeleteMember();
                     break;
-                case "Tillbaka":
+                case "🔙 Tillbaka":
                     adminMenu = false;
                     break;
             }
@@ -177,6 +190,9 @@ public class AdminService
         }
 
         AnsiConsole.Write(table);
+
+        AnsiConsole.WriteLine("\nTryck på valfri tangent för att fortsätta...");
+        Console.ReadKey(true);
     }
     public void WriteNewsletter(int accountId, string authorName)
     {

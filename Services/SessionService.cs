@@ -11,6 +11,17 @@ public class SessionService
         _context = context;
     }
 
+    public static void ShowHeader(Spectre.Console.Color colorSet, string message)
+    {
+        Console.Clear();
+        AnsiConsole.Write(
+            new FigletText(".NET KICKBOXING")
+                .LeftJustified()
+                .Color(colorSet));
+        AnsiConsole.Write(new Rule(message) { Justification = Justify.Left });
+        AnsiConsole.WriteLine();
+    }
+
     public void ShowWeeklySessions()
     {
         var sessions = _context.Session
@@ -37,5 +48,8 @@ public class SessionService
         }
 
         AnsiConsole.Write(table);
+        AnsiConsole.WriteLine();
+        AnsiConsole.MarkupLine("[grey]Tryck på valfri tangent för att återgå till huvudmenyn...[/]");
+        Console.ReadKey(true);
     }
 }
