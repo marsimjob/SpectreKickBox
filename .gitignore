@@ -1,8 +1,0 @@
-﻿.vs/
-*.user
-/obj/Debug/net9.0/SpectreKickBox.AssemblyInfo.cs
-/obj/Debug/net9.0/SpectreKickBox.AssemblyInfoInputs.cache
-bin/
-obj/
-*.user
-*.suo
