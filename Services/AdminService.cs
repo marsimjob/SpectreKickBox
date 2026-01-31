@@ -35,9 +35,18 @@ public class AdminService
         {   AnsiConsole.Clear(); 
             var choice = AnsiConsole.Prompt(
                 new SelectionPrompt<string>()
-                .Title("[yellow]Admin Tasks[/]")
-                .PageSize(10)
-                .AddChoices("Skapa Träningspass", "Rensa Träningsvecka", "Skriv Nyhetsbrev", "Rensa månadsgamla nyhetsbrev", "Se alla fakturor", "Skicka Faktura", "Visa Revenue", "Radera Medlem", "Tillbaka"));
+                    .Title("[yellow]Admin meny[/]")
+                    .AddChoices(new[]
+                    {
+                        "Visa Revenue",
+                        "Skapa medlemskap",
+                        "Förläng medlemskap",
+                        "Avsluta medlemskap",
+                        "Rapport: Top kunder (flest fakturor)",
+                        "Rapport: Medlemskap går ut inom 14 dagar",
+                        "Tillbaka"
+                    }));
+
 
             switch (choice)
             {
