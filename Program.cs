@@ -6,8 +6,27 @@ using SpectreKickBox.Services;
 
 
 // Load configuration
+
+string FindRootWithAppSettings(string startPath)
+{
+    var dir = new DirectoryInfo(startPath);
+
+    while (dir != null && !File.Exists(Path.Combine(dir.FullName, "appsettings.json")))
+    {
+        dir = dir.Parent;
+    }
+
+    if (dir == null)
+        throw new FileNotFoundException("Could not find appsettings.json in any parent directory.");
+
+    return dir.FullName;
+}
+
+var rootPath = FindRootWithAppSettings(AppContext.BaseDirectory);
+
 var config = new ConfigurationBuilder()
-    .AddJsonFile("C:\\Users\\hp\\Desktop\\SQL\\vecka 5\\gruppprojektt\\appsettings.json")
+    .SetBasePath(rootPath)
+    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
     .Build();
 
 // Setup DbContext
