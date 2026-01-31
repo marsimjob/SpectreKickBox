@@ -5,7 +5,7 @@ using Spectre.Console;
 using SpectreKickBox.Data;
 using SpectreKickBox.Services;
 
-
+// test comment
 // Load configuration
 
 string FindRootWithAppSettings(string startPath)
