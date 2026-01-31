@@ -188,26 +188,103 @@ namespace SpectreKickBox.Services
         }
 
         // Helper to show the dashboard info without asking for email again
+
         private void ShowProfile(Account userAcct)
         {
-            AnsiConsole.MarkupLine($"[bold underline]Profil Information[/]");
-            AnsiConsole.MarkupLine($"Namn: {userAcct.AppUser.FirstName} {userAcct.AppUser.LastName}");
-            AnsiConsole.MarkupLine($"Roll: {userAcct.Role.Title}");
+            // --- Hämta konto + AppUser från DB (viktigt för FK!) ---
+            var acc = _context.Account
+                .Include(a => a.AppUser)
+                .Include(a => a.Role)
+                .FirstOrDefault(a => a.AccountID == userAcct.AccountID);
 
+            if (acc?.AppUser == null)
+            {
+                AnsiConsole.MarkupLine("[red]Kunde inte hitta användaren kopplad till kontot.[/]");
+                return;
+            }
+
+            var userId = acc.AppUser.UserID;
+
+            // --- Visa grundinfo ---
+            AnsiConsole.MarkupLine($"[bold underline]Profil Information[/]");
+            AnsiConsole.MarkupLine($"Namn: {acc.AppUser.FirstName} {acc.AppUser.LastName}");
+            AnsiConsole.MarkupLine($"Roll: {acc.Role.Title}");
+
+            // --- Hämta aktivt medlemskap ---
             var membership = _context.Membership
                 .Include(m => m.MembershipPlan)
                     .ThenInclude(mp => mp.PriceList)
-                .FirstOrDefault(m => m.UserID == userAcct.AppUser.UserID && m.IsActive);
+                .FirstOrDefault(m => m.UserID == userId && m.IsActive);
 
             if (membership != null)
             {
                 AnsiConsole.MarkupLine($"Plan: [green]{membership.MembershipPlan.BillingPeriod}[/]");
-                AnsiConsole.MarkupLine($"Pris: {membership.MembershipPlan.PriceList.Label} ({membership.MembershipPlan.PriceList.Amount} kr)");
+                AnsiConsole.MarkupLine(
+                    $"Pris: {membership.MembershipPlan.PriceList.Label} " +
+                    $"({membership.MembershipPlan.PriceList.Amount} kr)"
+                );
+                return;
             }
-            else
+
+            // --- Inget medlemskap: erbjud nytt ---
+            AnsiConsole.MarkupLine("[yellow]Inget aktivt medlemskap hittades.[/]");
+
+            if (!AnsiConsole.Confirm("Vill du teckna ett nytt medlemskap?"))
+                return;
+
+            var choice = AnsiConsole.Prompt(
+                new SelectionPrompt<string>()
+                    .Title("[blue]Välj din prisplan[/]")
+                    .AddChoices("Monthly", "Quarterly", "Yearly", "Avsluta"));
+
+            if (choice == "Avsluta")
+                return;
+
+            // --- Hämta vald MembershipPlan ---
+            var plan = _context.MembershipPlan
+                .FirstOrDefault(p => p.BillingPeriod == choice);
+
+            if (plan == null)
             {
-                AnsiConsole.MarkupLine("[yellow]Inget aktivt medlemskap hittades.[/]");
+                AnsiConsole.MarkupLine("[red]Kunde inte hitta vald plan i databasen.[/]");
+                return;
             }
+
+            // --- Beräkna giltighetstid ---
+            // --- Beräkna giltighetstid ---
+            var start = DateTime.Now;
+
+            var end = choice switch
+            {
+                "Monthly" => start.AddMonths(1),
+                "Quarterly" => start.AddMonths(3),
+                "Yearly" => start.AddYears(1),
+                _ => start.AddMonths(1)
+            };
+
+            // --- Skapa Membership ---
+            var newMembership = new Membership
+            {
+                UserID = userId,
+                MembershipPlanID = plan.MembershipPlanID,
+                IsActive = true,
+                StartDate = start,
+                EndDate = end
+            };
+
+
+
+            _context.Membership.Add(newMembership);
+            _context.SaveChanges();
+
+            AnsiConsole.MarkupLine(
+                $"[green]Medlemskap har skapats![/]\n" +
+                $"Din prisplan är: [blue]{plan.BillingPeriod}[/]\n" +
+                $"Giltigt från: [yellow]{start:yyyy-MM-dd}[/] till [yellow]{end:yyyy-MM-dd}[/]"
+            );
+
+
         }
+
     }
 }
