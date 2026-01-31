@@ -1,6 +1,5 @@
-﻿.vs/
-[Bb]in/
-[Oo]bj/
-*.user
-/obj/Debug/net9.0/SpectreKickBox.AssemblyInfo.cs
-/obj/Debug/net9.0/SpectreKickBox.assets.cache
+﻿bin/
+obj/
+*.dll
+*.pdb
+*.cache
