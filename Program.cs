@@ -7,7 +7,7 @@ using SpectreKickBox.Services;
 
 // Load configuration
 var config = new ConfigurationBuilder()
-    .AddJsonFile("C:\\Users\\mario\\source\\repos\\SpectreKickBox\\appsettings.json")
+    .AddJsonFile("C:\\Users\\hp\\Desktop\\SQL\\vecka 5\\gruppprojektt\\appsettings.json")
     .Build();
 
 // Setup DbContext
@@ -19,6 +19,7 @@ var options = new DbContextOptionsBuilder<KickBoxingClubContext>()
 var memberService = new MemberService(new KickBoxingClubContext(options));
 var sessionService = new SessionService(new KickBoxingClubContext(options));
 var adminService = new AdminService(new KickBoxingClubContext(options));
+var RegisterService = new RegisterService(new KickBoxingClubContext(options));
 
 bool running = true;
 while (running)
@@ -29,6 +30,7 @@ while (running)
             .AddChoices(
                 "Se Nyheter",
                 "Se Hela Träningsschemat",
+                "Bli medlem",
                 "Mitt Medlemskap (login)",
                 "Admin Panel (login)",
                 "Avsluta"));
@@ -64,8 +66,12 @@ while (running)
                 }
             }
             break;
+
         case "Admin Panel (login)":
             adminService.LoginAndAdminTasks();
+            break;
+        case "Bli medlem":
+            RegisterService.Register();
             break;
         case "Avsluta":
             running = false;
