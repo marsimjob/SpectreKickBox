@@ -13,6 +13,7 @@ public class AdminService
     }
     public void LoginAndAdminTasks()
     {
+        AnsiConsole.Clear(); //clear the console 
         var email = AnsiConsole.Ask<string>("Admin Email:");
 
         // Fetch the account including the AppUser to get the name
@@ -31,7 +32,7 @@ public class AdminService
 
         bool adminMenu = true;
         while (adminMenu)
-        {
+        {   AnsiConsole.Clear(); 
             var choice = AnsiConsole.Prompt(
                 new SelectionPrompt<string>()
                 .Title("[yellow]Admin Tasks[/]")
@@ -70,8 +71,9 @@ public class AdminService
             }
         }
     }
-    public void DeleteAllSessions()
-    {
+    public void DeleteAllSessions() 
+
+    {    AnsiConsole.Clear(); //clear the console
         var count = _context.Session.Count();
 
         if (count == 0)
@@ -92,7 +94,8 @@ public class AdminService
         }
     }
     public void AddWorkoutSession()
-    {
+
+    {   AnsiConsole.Clear(); //clear the console
         AnsiConsole.MarkupLine("[bold yellow]SKAPA NYTT TRÄNINGSPASS[/]");
 
         var trainers = _context.Account
@@ -144,8 +147,9 @@ public class AdminService
 
         AnsiConsole.MarkupLine($"[green]Succé![/] Passet '[bold]{typeChoice.TypeTitle}[/]' med [bold]{trainerChoice.AppUser.FirstName}[/] är nu skapat för vecka {currentWeek}.");
     }
-    public void OverseeInvoices()
-    {
+    public void OverseeInvoices() 
+       
+    {  AnsiConsole.Clear(); //clear the console
         var invoices = _context.Invoice
     .Include(i => i.Account)
         .ThenInclude(a => a.AppUser) // This reaches the AppUser table
@@ -179,7 +183,7 @@ public class AdminService
         AnsiConsole.Write(table);
     }
     public void WriteNewsletter(int accountId, string authorName)
-    {
+    {   AnsiConsole.Clear(); //clear the console
         AnsiConsole.MarkupLine($"[yellow]Skriv och posta ett nyhetsbrev som:[/] [blue]{authorName}[/]");
 
         // Ask for NewsType using a prompt for better UX
@@ -210,8 +214,8 @@ public class AdminService
 
         AnsiConsole.MarkupLine("[green]Nyhetsbrevet har postats![/]");
     }
-    public void ShowRevenue()
-    {
+    public void ShowRevenue() 
+        {  AnsiConsole.Clear(); //clear the console
         // Add a safety check in case the view returns no rows
         var rev = _context.vw_TotalInvoiceRevenue.FirstOrDefault();
 
@@ -234,8 +238,8 @@ public class AdminService
         AnsiConsole.WriteLine("\nTryck på valfri tangent för att fortsätta...");
         Console.ReadKey(true);
     }
-    public void CleanOldNewsletters()
-    {
+    public void CleanOldNewsletters() 
+    {    AnsiConsole.Clear(); //clear the console 
         var cal = System.Globalization.CultureInfo.CurrentCulture.Calendar;
         DateTime now = DateTime.Now;
 
@@ -278,6 +282,7 @@ public class AdminService
 
     public void CreateAndSendInvoice()
     {
+        AnsiConsole.Clear(); //clear the console
         AnsiConsole.MarkupLine("[yellow]Skapa nya fakturor för medlemmar[/]");
 
         var invoicesToCreate = new List<Invoice>();
@@ -342,7 +347,7 @@ public class AdminService
 
 
     public void DeleteMember()
-    {
+    {    AnsiConsole.Clear(); //clear the console 
         int id = AnsiConsole.Ask<int>("AccountID att ta bort?");
 
         // 1. Fetch the account AND the associated AppUser data

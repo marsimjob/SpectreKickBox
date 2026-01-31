@@ -5111,23 +5111,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\hp\\.nuget\\packages\\": {},
+    "C:\\Users\\Hager Sayed\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\hp\\Desktop\\SQL\\vecka 5\\gruppprojektt\\SpectreKickBox.csproj",
+      "projectUniqueName": "C:\\Users\\Hager Sayed\\Desktop\\gruppproject\\SpectreKickBox.csproj",
       "projectName": "SpectreKickBox",
-      "projectPath": "C:\\Users\\hp\\Desktop\\SQL\\vecka 5\\gruppprojektt\\SpectreKickBox.csproj",
-      "packagesPath": "C:\\Users\\hp\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\hp\\Desktop\\SQL\\vecka 5\\gruppprojektt\\obj\\",
+      "projectPath": "C:\\Users\\Hager Sayed\\Desktop\\gruppproject\\SpectreKickBox.csproj",
+      "packagesPath": "C:\\Users\\Hager Sayed\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Hager Sayed\\Desktop\\gruppproject\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\hp\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Hager Sayed\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -5155,7 +5155,7 @@
         "auditLevel": "low",
         "auditMode": "direct"
       },
-      "SdkAnalysisLevel": "10.0.100"
+      "SdkAnalysisLevel": "9.0.300"
     },
     "frameworks": {
       "net9.0": {
@@ -5208,7 +5208,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.102/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.308/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

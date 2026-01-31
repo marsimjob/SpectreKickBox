@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Azure;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Spectre.Console;
 using SpectreKickBox.Data;
@@ -7,7 +8,7 @@ using SpectreKickBox.Services;
 
 // Load configuration
 var config = new ConfigurationBuilder()
-    .AddJsonFile("C:\\Users\\hp\\Desktop\\SQL\\vecka 5\\gruppprojektt\\appsettings.json")
+    .AddJsonFile("C:\\Users\\Hager Sayed\\Desktop\\gruppproject\\appsettings.json")
     .Build();
 
 // Setup DbContext
