@@ -6,10 +6,13 @@ using SpectreKickBox.Data;
 using SpectreKickBox.Services;
 
 
-// Load configuration
+// Tvinga konsolen att tolka UTF-8 (viktigt för emojis och specialtecken)
+Console.OutputEncoding = Encoding.UTF8;
 
+// Load configuration
 string FindRootWithAppSettings(string startPath)
 {
+    
     var dir = new DirectoryInfo(startPath);
 
     while (dir != null && !File.Exists(Path.Combine(dir.FullName, "appsettings.json")))
