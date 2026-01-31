@@ -44,9 +44,14 @@ var RegisterService = new RegisterService(new KickBoxingClubContext(options));
 bool running = true;
 while (running)
 {
+    AnsiConsole.Write(
+               new FigletText("Kickboxing Club")
+                   .Centered()
+                   .Color(Color.Green)
+           );
+
     var choice = AnsiConsole.Prompt(
         new SelectionPrompt<string>()
-            .Title("[green]Kickboxing Club[/]")
             .AddChoices(
                 "Se Nyheter",
                 "Se Hela Träningsschemat",

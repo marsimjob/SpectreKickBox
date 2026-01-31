@@ -32,52 +32,79 @@ public class AdminService
 
         bool adminMenu = true;
         while (adminMenu)
-        {   AnsiConsole.Clear(); 
-            var choice = AnsiConsole.Prompt(
-                new SelectionPrompt<string>()
-                    .Title("[yellow]Admin meny[/]")
-                    .AddChoices(new[]
-                    {
-                        "Visa Revenue",
-                        "Skapa medlemskap",
-                        "Förläng medlemskap",
-                        "Avsluta medlemskap",
-                        "Rapport: Top kunder (flest fakturor)",
-                        "Rapport: Medlemskap går ut inom 14 dagar",
-                        "Tillbaka"
-                    }));
+        {
+            AnsiConsole.Clear();
 
+            AnsiConsole.Write(
+                new FigletText("ADMIN MENU")
+                    .Centered()
+                    .Color(Color.Yellow)
+            );
+
+            var choice = AnsiConsole.Prompt(
+            new SelectionPrompt<string>()
+            .AddChoices(new[]
+            {
+                "Skapa Träningspass",
+                "Rensa Träningsvecka",
+                "Skriv Nyhetsbrev",
+                "Rensa månadsgamla nyhetsbrev",
+                "Se alla fakturor",
+                "Skicka Faktura",
+                "Visa Revenue",
+                "Rapport: Top kunder (flest fakturor)",
+                "Rapport: Medlemskap går ut inom 14 dagar",
+                "Radera Medlem",
+                "Tillbaka"
+            }));
 
             switch (choice)
             {
                 case "Skapa Träningspass":
                     AddWorkoutSession();
                     break;
+
                 case "Rensa Träningsvecka":
                     DeleteAllSessions();
                     break;
+
                 case "Skriv Nyhetsbrev":
                     WriteNewsletter(userAcct.AccountID, userAcct.AppUser.FirstName);
                     break;
+
                 case "Rensa månadsgamla nyhetsbrev":
                     CleanOldNewsletters();
                     break;
+
                 case "Se alla fakturor":
                     OverseeInvoices();
                     break;
+
                 case "Skicka Faktura":
                     CreateAndSendInvoice();
                     break;
+
                 case "Visa Revenue":
                     ShowRevenue();
                     break;
+
+                case "Rapport: Top kunder (flest fakturor)":
+                    ReportTopCustomers();
+                    break;
+
+                case "Rapport: Medlemskap går ut inom 14 dagar":
+                    ReportExpiringMemberships();
+                    break;
+
                 case "Radera Medlem":
                     DeleteMember();
                     break;
+
                 case "Tillbaka":
                     adminMenu = false;
                     break;
             }
+
         }
     }
     public void DeleteAllSessions() 
@@ -156,9 +183,9 @@ public class AdminService
 
         AnsiConsole.MarkupLine($"[green]Succé![/] Passet '[bold]{typeChoice.TypeTitle}[/]' med [bold]{trainerChoice.AppUser.FirstName}[/] är nu skapat för vecka {currentWeek}.");
     }
-    public void OverseeInvoices() 
-       
-    {  AnsiConsole.Clear(); //clear the console
+    public void OverseeInvoices()
+    {
+        AnsiConsole.Clear(); //clear the console
         var invoices = _context.Invoice
     .Include(i => i.Account)
         .ThenInclude(a => a.AppUser) // This reaches the AppUser table
@@ -190,6 +217,7 @@ public class AdminService
         }
 
         AnsiConsole.Write(table);
+        Console.ReadKey();
     }
     public void WriteNewsletter(int accountId, string authorName)
     {   AnsiConsole.Clear(); //clear the console
@@ -247,6 +275,110 @@ public class AdminService
         AnsiConsole.WriteLine("\nTryck på valfri tangent för att fortsätta...");
         Console.ReadKey(true);
     }
+
+    public void ReportTopCustomers()
+    {
+        AnsiConsole.Clear();
+
+        var data = _context.Invoice
+            .GroupBy(i => i.AccountID)
+            .Select(g => new
+            {
+                AccountID = g.Key,
+                TotalInvoices = g.Count()
+            })
+            .OrderByDescending(x => x.TotalInvoices)
+            .Take(10)
+            .Join(
+                _context.Account.Include(a => a.AppUser),
+                x => x.AccountID,
+                a => a.AccountID,
+                (x, a) => new
+                {
+                    a.AccountID,
+                    Name = a.AppUser.FirstName + " " + a.AppUser.LastName,
+                    TotalInvoices = x.TotalInvoices
+                })
+            .ToList();
+
+        if (!data.Any())
+        {
+            AnsiConsole.MarkupLine("[yellow]Inga fakturor hittades.[/]");
+            Console.ReadKey(true);
+            return;
+        }
+
+        var table = new Table()
+            .Border(TableBorder.Rounded)
+            .Title("[yellow]TOP KUNDER – FLEST FAKTUROR[/]");
+
+        table.AddColumn("AccountID");
+        table.AddColumn("Medlem");
+        table.AddColumn("Antal fakturor");
+
+        foreach (var r in data)
+        {
+            table.AddRow(
+                r.AccountID.ToString(),
+                r.Name,
+                r.TotalInvoices.ToString()
+            );
+        }
+
+        AnsiConsole.Write(table);
+        AnsiConsole.WriteLine("\nTryck på valfri tangent för att fortsätta...");
+        Console.ReadKey(true);
+    }
+
+    public void ReportExpiringMemberships()
+    {
+        AnsiConsole.Clear();
+
+        var limitDate = DateTime.Today.AddDays(14);
+
+        var memberships = _context.Membership
+            .Include(m => m.AppUser)
+            .Include(m => m.MembershipPlan)
+                .ThenInclude(mp => mp.PriceList)
+            .Where(m => m.IsActive && m.EndDate <= limitDate)
+            .OrderBy(m => m.EndDate)
+            .ToList();
+
+        if (!memberships.Any())
+        {
+            AnsiConsole.MarkupLine("[green]Inga medlemskap går ut inom 14 dagar.[/]");
+            Console.ReadKey(true);
+            return;
+        }
+
+        var table = new Table()
+            .Border(TableBorder.Rounded)
+            .Title("[yellow]MEDLEMSKAP SOM GÅR UT INOM 14 DAGAR[/]");
+
+        table.AddColumn("Medlem");
+        table.AddColumn("Plan");
+        table.AddColumn("Slutdatum");
+        table.AddColumn("Dagar kvar");
+        table.AddColumn("Pris");
+
+        foreach (var m in memberships)
+        {
+            int daysLeft = (m.EndDate.Date - DateTime.Today).Days;
+
+            table.AddRow(
+                $"{m.AppUser.FirstName} {m.AppUser.LastName}",
+                m.MembershipPlan.BillingPeriod,
+                m.EndDate.ToString("yyyy-MM-dd"),
+                daysLeft.ToString(),
+                $"{m.MembershipPlan.PriceList.Amount} kr"
+            );
+        }
+
+        AnsiConsole.Write(table);
+        AnsiConsole.WriteLine("\nTryck på valfri tangent för att fortsätta...");
+        Console.ReadKey(true);
+    }
+
     public void CleanOldNewsletters() 
     {    AnsiConsole.Clear(); //clear the console 
         var cal = System.Globalization.CultureInfo.CurrentCulture.Calendar;
