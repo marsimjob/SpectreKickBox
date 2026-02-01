@@ -8,7 +8,7 @@ using SpectreKickBox.Services;
 // test comment
 // Load configuration
 
-Console.OutputEncoding = "UTF-8";
+Console.OutputEncoding = Encoding.UTF8;
 
 string FindRootWithAppSettings(string startPath)
 {
