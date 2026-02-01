@@ -8,6 +8,8 @@ using SpectreKickBox.Services;
 // test comment
 // Load configuration
 
+Console.OutputEncoding = "UTF-8";
+
 string FindRootWithAppSettings(string startPath)
 {
     var dir = new DirectoryInfo(startPath);
