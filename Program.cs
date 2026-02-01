@@ -8,6 +8,8 @@ using System.Text;
 // Tvinga konsolen att tolka UTF-8 (viktigt för emojis och specialtecken)
 Console.OutputEncoding = Encoding.UTF8;
 
+// test comment for push
+
 // Load configuration
 var config = new ConfigurationBuilder()
     .AddJsonFile("C:\\Users\\Senkai\\source\\repos\\SpectreKickBox\\appsettings.json")
