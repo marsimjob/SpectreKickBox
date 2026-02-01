@@ -41,7 +41,7 @@ var sessionService = new SessionService(new KickBoxingClubContext(options));
 var adminService = new AdminService(new KickBoxingClubContext(options));
 var RegisterService = new RegisterService(new KickBoxingClubContext(options));
 
-PlayKickAnimation()
+PlayKickAnimation();
 
 bool running = true;
 while (running)
@@ -196,4 +196,4 @@ static void PlayKickAnimation()
 
     Console.CursorVisible = true;
     Console.Clear();
-
+}
