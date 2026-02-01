@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Spectre.Console;
 using SpectreKickBox.Data;
 using SpectreKickBox.Services;
+using System.Text;
 
 // test comment
 // Load configuration
